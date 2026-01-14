@@ -2,6 +2,6 @@
 -- e ai deduplicar e trazer apenas valores distintos nessa combinação 
 
 
-SELECT COUNT(DISTINCT IdCliente) 
+SELECT COUNT(DISTINCT IdCliente 
 
 FROM clientes

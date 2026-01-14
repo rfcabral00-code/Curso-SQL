@@ -136,28 +136,116 @@ Conta apenas registros onde idCliente não é NULL
 
 📌 Se idCliente for chave primária, todos os COUNT retornam o mesmo valor.
 
-📚 Próximos conteúdos do curso
+🗓️ Dia 3 – Agregações, DISTINCT e COUNT DISTINCT
 
-DISTINCT
+Nesta aula foram apresentados conceitos fundamentais para resumir, deduplicar e analisar dados, utilizando funções de agregação e o operador DISTINCT.
 
-Estatística aplicada
+🔹 DISTINCT e COUNT DISTINCT
+
+O DISTINCT é utilizado para eliminar duplicidades, considerando a combinação das colunas selecionadas.
+
+Contagem de registros distintos em um período
+SELECT 
+    COUNT(*) AS totalRegistros,
+    COUNT(DISTINCT IdTransacao) AS transacoesDistintas,
+    COUNT(DISTINCT idCliente) AS clientesDistintos
+FROM transacoes
+WHERE DtCriacao >= '2025-07-01'
+  AND DtCriacao <  '2025-08-01';
+
+
+O que está sendo analisado:
+
+Total de registros no período
+
+Total de transações únicas
+
+Total de clientes únicos
+
+📌 Observação importante:
+DISTINCT atua sobre a coluna informada ou sobre a combinação de colunas da query, eliminando duplicidades com base nisso.
+
+DISTINCT aplicado diretamente na contagem de clientes
+SELECT 
+    COUNT(DISTINCT idCliente) AS clientesDistintos
+FROM clientes;
+
+
+👉 Retorna o número de clientes únicos existentes na tabela.
+
+🔹 Agregações com SUM e CASE WHEN
+
+As funções de agregação permitem “espremer” uma tabela, resumindo grandes volumes de dados em métricas relevantes.
+
+Exemplo – Análise de pontos no período
+SELECT
+    SUM(qtdePontos) AS qtdePontosTotal,
+
+    SUM(CASE
+            WHEN qtdePontos > 0 THEN qtdePontos
+        END) AS qtdePontosPositivos,
+
+    SUM(CASE
+            WHEN qtdePontos < 0 THEN qtdePontos
+        END) AS qtdePontosNegativos,
+
+    COUNT(CASE
+              WHEN qtdePontos < 0 THEN 1
+          END) AS qtdeTransacoesNegativas
+FROM transacoes
+WHERE DtCriacao >= '2025-07-01'
+  AND DtCriacao <  '2025-08-01';
+
+
+O que foi feito:
+
+Soma total de pontos
+
+Soma apenas de pontos positivos
+
+Soma apenas de pontos negativos
+
+Contagem de transações negativas
+
+📌 Uso combinado de CASE WHEN + agregações, padrão muito comum em análises reais.
+
+🔹 AVG, MIN, MAX e ROUND
+
+Além de somar e contar, também foram utilizadas funções para análise estatística básica.
+
+SELECT
+    ROUND(AVG(qtdePontos), 2) AS mediaCarteira,
+    ROUND(1.0 * SUM(qtdePontos) / COUNT(idCliente), 2) AS mediaCarteiraRoots,
+    MIN(qtdePontos) AS minCarteira,
+    MAX(qtdePontos) AS maxCarteira,
+    SUM(flTwitch) AS totalTwitch,
+    SUM(flEmail) AS totalEmail
+FROM clientes;
+
+Pontos importantes da aula
+
+ROUND(valor, 2) → define quantidade de casas decimais
+
+Multiplicar por 1.0 força o cálculo para float, evitando divisão inteira
+
+MIN e MAX retornam extremos do conjunto
+
+SUM(flTwitch) funciona como contagem quando a coluna é 0/1
+
+🧠 Conexão com próximos temas
+
+Esses conceitos são a base direta para:
 
 GROUP BY
 
 HAVING
 
-Cruzamento de dados
+Métricas por cliente, produto ou período
 
-JOINS
+Dashboards e relatórios analíticos
 
-Subqueries
+Projetos de dados reais
 
-CTEs (Common Table Expressions)
+Conteúdo das próximas aulas:
 
-Enumeração de linhas
-
-Window Functions
-
-DDL e DML
-
-Projeto final prático
+GROUP BY → HAVING → JOIN → CTE → WINDOW FUNCTIONS
