@@ -234,11 +234,9 @@ SUM(flTwitch) funciona como contagem quando a coluna é 0/1
 
 🧠 Conexão com próximos temas
 
+Aula 4 - Group By e Having
+
 Esses conceitos são a base direta para:
-
-GROUP BY
-
-HAVING
 
 Métricas por cliente, produto ou período
 

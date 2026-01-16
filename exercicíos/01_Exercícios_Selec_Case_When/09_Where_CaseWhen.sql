@@ -2,7 +2,9 @@
 -- "alto", "médio" e "baixo" para o valor dos pontos
 -- [<10;<500;>=500]
 
-SELECT *,
+SELECT 
+        IdTransacao,
+        qtdePontos,
 
         CASE
             WHEN QtdePontos < 10 THEN 'baixo'
