@@ -1,0 +1,22 @@
+-- em 2024, quantas transações de lover tivemos ?
+
+SELECT 
+        t3.DescCategoriaProduto,
+        count(t1.IdTransacao)
+       
+FROM transacoes AS t1
+
+LEFT JOIN transacao_produto AS t2
+ON T1.IdTransacao = T2.IdTransacao
+
+LEFT JOIN produtos AS t3
+ON t2.IdProduto = t3.IdProduto
+
+WHERE DtCriacao >= '2024-01-01'
+AND DtCriacao < '2025-01-01'
+--AND t3.DescCategoriaProduto = 'lovers'
+
+GROUP BY t3.DescCategoriaProduto
+HAVING count(DISTINCT t1.IdTransacao) < 1000
+
+ORDER BY count(DISTINCT t1.IdTransacao) DESC
