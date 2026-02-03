@@ -12,6 +12,7 @@ WITH tb_sumario_dia AS (
     GROUP BY dtDia
 )
 
+
 SELECT 
         dtDia,
         qtUsuarios,
@@ -20,3 +21,5 @@ SELECT
 FROM tb_sumario_dia
 
 ORDER BY dtDia
+
+
