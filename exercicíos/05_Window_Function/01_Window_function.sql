@@ -3,7 +3,7 @@
 --para isso, foi adicionado na query o cte de tb_acum e a query abaixo dela
 -- que pegamos o dia que aconteceu de atingir mais de 100k de transacoes acumuladas
 
-WITH tb_sumario_dia AS (
+WITH tb_diario AS (
 
     SELECT substr(DtCriacao,1,10) as dtDia,
             count(DISTINCT IdTransacao) as qtdeTransacao
@@ -17,7 +17,7 @@ tb_acum AS (
         SELECT *,
                 sum(qtdeTransacao) OVER (ORDER BY dtDia) AS qtTransacaoAcum
         
-        FROM tb_sumario_dia
+        FROM tb_diario
 
         ORDER BY dtDia
 )
