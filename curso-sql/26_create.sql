@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS clientes_d28 (
 );
 
 
-INSERT INTO clientes_d
+INSERT INTO clientes_d28
 SELECT idCliente,
     count(DISTINCT IdTransacao) AS qtdeTransacao
 
