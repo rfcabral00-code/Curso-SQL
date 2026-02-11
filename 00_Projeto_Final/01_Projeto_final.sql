@@ -1,0 +1,12 @@
+-- Vamos construir uma tabela com o perfil comportamental dos nossos usuários.
+-- Features que serão construidas -> Criar caracteriscas a respeito do usuário
+-- Quantidade de transações históricas (vida, D7, D14, D28, D56);
+-- Dias desde a última transação
+-- Idade na base
+-- Produto mais usado (vida, D7, D14, D28, D56);
+-- Saldo de pontos atual;
+-- Pontos acumulados positivos (vida, D7, D14, D28, D56);
+-- Pontos acumulados negativos (vida, D7, D14, D28, D56);
+-- Dias da semana mais ativos (D28)
+-- Período do dia mais ativo (D28)
+-- Engajamento em D28 versus Vida
