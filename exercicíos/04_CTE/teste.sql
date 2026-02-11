@@ -1,29 +1,4 @@
--- Vamos construir uma tabela com o perfil comportamental dos nossos usuários.
--- Features que serão construidas -> Criar caracteriscas a respeito do usuário
--- Quantidade de transações históricas (vida, D7, D14, D28, D56); ok
--- Dias desde a última transação; ok
--- Idade na base;ok 
--- Produto mais usado (vida, D7, D14, D28, D56); ok
--- Saldo de pontos atual; ok
--- Pontos acumulados positivos (vida, D7, D14, D28, D56); ok
--- Pontos acumulados negativos (vida, D7, D14, D28, D56); ok
--- Dias da semana mais ativos (D28)
--- Período do dia mais ativo (D28)
--- Engajamento em D28 versus Vida
-
-
-WITH tb_transacoes AS (
-
-        SELECT idTransacao,
-                idCliente,
-                qtdePontos,
-                datetime(substr(dtCriacao,1,19)) AS dtCriacao,
-                julianday('now') - julianday(substr(dtCriacao,1,10)) AS diffDate
-        
-        FROM transacoes
-),
-
-tb_cliente AS (
+WITH tb_cliente AS (
 
         SELECT IdCliente,
         datetime(substr(dtCriacao,1,19)) AS dtCriacao,
@@ -31,6 +6,20 @@ tb_cliente AS (
 
         FROM clientes
 ),
+
+tb_cliente_produto_rn AS (
+
+        SELECT *,
+                row_number () OVER (PARTITION BY idCliente ORDER BY qtdeVida DESC) AS rnVida,
+                row_number () OVER (PARTITION BY idCliente ORDER BY qtde56 DESC) AS rn56,
+                row_number () OVER (PARTITION BY idCliente ORDER BY qtde28 DESC) AS rn28,
+                row_number () OVER (PARTITION BY idCliente ORDER BY qtde14 DESC) AS rn14,
+                row_number () OVER (PARTITION BY idCliente ORDER BY qtde7 DESC)  AS rn7
+
+
+        FROM tb_cliente_produto
+),
+
 
 tb_sumario_transacoes AS (
 
@@ -59,62 +48,6 @@ tb_sumario_transacoes AS (
         FROM tb_transacoes
         GROUP BY idCliente
 ),
-
-tb_transacao_Produto AS (
-
-        SELECT T1.*,
-                t3.DescNomeProduto,
-                t3.DescCategoriaProduto
-
-        FROM tb_transacoes AS t1
-
-        LEFT JOIN transacao_produto AS T2
-        ON t1.IdTransacao = t2.IdTransacao
-
-        LEFT JOIN produtos AS t3
-        ON t2.IdProduto = t3.IdProduto
-),
-
-tb_cliente_produto AS (
-
-        SELECT idCliente,
-                DescNomeProduto,
-                count(*) AS qtdeVida,
-                count(CASE WHEN diffDate <= 56 THEN IdTransacao END) AS qtde56,
-                count(CASE WHEN diffDate <= 28 THEN IdTransacao END) AS qtde28,
-                count(CASE WHEN diffDate <= 14 THEN IdTransacao END) AS qtde14,
-                count(CASE WHEN diffDate <= 7 THEN IdTransacao END) AS qtde7
-
-        FROM tb_transacao_Produto
-
-        GROUP BY idCliente, DescNomeProduto
-),
-
-tb_cliente_produto_rn AS (
-
-        SELECT *,
-                row_number () OVER (PARTITION BY idCliente ORDER BY qtdeVida DESC) AS rnVida,
-                row_number () OVER (PARTITION BY idCliente ORDER BY qtde56 DESC) AS rn56,
-                row_number () OVER (PARTITION BY idCliente ORDER BY qtde28 DESC) AS rn28,
-                row_number () OVER (PARTITION BY idCliente ORDER BY qtde14 DESC) AS rn14,
-                row_number () OVER (PARTITION BY idCliente ORDER BY qtde7 DESC)  AS rn7
-
-
-        FROM tb_cliente_produto
-),
-
-tb_cliente_dia AS (
-        SELECT idCliente,
-        strftime('%w', DtCriacao) AS dtDia,
-        count(*) AS qtdeTransacao
-
-
-        FROM tb_transacoes
-
-        WHERE diffDate <= 28
-        GROUP BY idCliente, dtDia
-),
-
 tb_cliente_dia_rn AS (
 
         SELECT *, 
@@ -165,7 +98,4 @@ tb_join AS (
 
 )
 
-SELECT tb_transacoes,
-        idCliente,
-        dtCriacao,
-        CASE WHENstrftime('%H', dtCriacao)
+SELECT * FROM tb_join
